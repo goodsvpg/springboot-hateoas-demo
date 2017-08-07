@@ -23,7 +23,6 @@ public class Trip {
 	private String title;
 	
 	public Trip() {
-		// TODO Auto-generated constructor stub
 	}
 	
 	public Trip(Tourist tourist, String uri, String title){
@@ -47,5 +46,10 @@ public class Trip {
 	public String getTitle() {
 		return title;
 	}
-	
+
+	@Override
+	public String toString() {
+		return "Trip [tourist=" + tourist + ", id=" + id + ", uri=" + uri + ", title=" + title + "]";
+	}
+
 }

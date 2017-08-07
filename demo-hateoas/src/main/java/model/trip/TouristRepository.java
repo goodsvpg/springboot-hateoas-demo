@@ -4,6 +4,6 @@ import java.util.Optional;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 
-public interface TouristRepository extends JpaRepository<Tourist, Long>{
+public interface TouristRepository extends JpaRepository<Tourist, String>{
 	Optional<Tourist> findByUserEmail(String userEmail);
 }

@@ -4,6 +4,6 @@ import java.util.Collection;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 
-public interface TripRepository extends JpaRepository<Trip, Long>{
-	Collection<Trip> findByTripUserEmail(String userEmail);
+public interface TripRepository extends JpaRepository<Trip, String>{
+	Collection<Trip> findByTouristUserEmail(String userEmail);
 }
