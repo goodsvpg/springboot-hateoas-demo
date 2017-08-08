@@ -12,7 +12,6 @@ public class TripResource extends ResourceSupport{
 	//link를 수집하는 DTO( Data Transfer Object) Base Class
 	//trip collection과 개별 self link를 삽입하려고 사용
 	private final Trip trip;
-
 	
 	public TripResource(Trip trip) {
 		String userEmail = trip.getTourist().getUserEmail();

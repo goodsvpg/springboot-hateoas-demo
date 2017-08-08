@@ -19,7 +19,6 @@ import model.trip.Trip;
 import model.trip.TripRepository;
 import resource.trip.TripResource;
 
-
 @RestController
 @RequestMapping("/{userEmail}/tripList")
 public class TripRestController{

@@ -11,7 +11,6 @@ import org.springframework.context.annotation.ComponentScan;
 
 import rest.trip.TripRestController;
 
-
 @SpringBootApplication
 @ComponentScan(basePackageClasses = TripRestController.class)
 //같은 패키지 내에 controller가 존재하지 않으면 써주어야 찾음

@@ -90,8 +90,6 @@ public class TripRestControllerTest {
 		assertNotNull("the JSON message converter must not be null", this.httpMessageConverter);
 	}
 	
-	
-	
 	@Test
 	public void getSingleTrip() throws Exception{
 		System.out.println("test SingleTrip getId="+this.tripList.get(0).getId());
