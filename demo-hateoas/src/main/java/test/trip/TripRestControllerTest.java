@@ -4,13 +4,13 @@ import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.autoconfigure.condition.ConditionalOnNotWebApplication;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
 import org.springframework.http.converter.HttpMessageConverter;
 import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
 import org.springframework.mock.http.MockHttpOutputMessage;
 import org.springframework.test.context.junit4.SpringRunner;
+import org.springframework.test.context.web.WebAppConfiguration;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.web.context.WebApplicationContext;
 
@@ -37,7 +37,7 @@ import java.util.List;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest(classes = Application.class)
-@ConditionalOnNotWebApplication
+@WebAppConfiguration
 public class TripRestControllerTest {
 
 	private MockMvc mockMvc;
@@ -75,9 +75,10 @@ public class TripRestControllerTest {
 		//batch call안의 모든 entity를 지움
 		this.touristRepository.deleteAllInBatch();
 		
-		this.tourist = touristRepository.save(new Tourist(userEmail, "aa"));
-		this.tripList.add(tripRepository.save(new Trip(tourist, "http://hello-demo-hateoas/1/", "title1")));
-		this.tripList.add(tripRepository.save(new Trip(tourist, "http://hello-demo-hateoas/2/", "title2")));
+		this.tourist = touristRepository.save(new Tourist(userEmail, "nickName"));
+		this.tripList.add(tripRepository.save(new Trip(tourist, "title1", "description1")));
+		this.tripList.add(tripRepository.save(new Trip(tourist, "title2", "description2")));
+		System.out.println("test tripList="+this.tripList);
 	}
 
 	@Autowired
@@ -89,51 +90,21 @@ public class TripRestControllerTest {
 		assertNotNull("the JSON message converter must not be null", this.httpMessageConverter);
 	}
 	
-	@Test
-	public void touristNotFound() throws Exception{
-		mockMvc.perform(post("/aa@helloMail.com/tripList/")
-				.content(this.json(new Trip()))
-				.contentType(mediaType))
-				.andExpect(status().isNotFound());
-	}
 	
 	@Test
 	public void getSingleTrip() throws Exception{
-		mockMvc.perform(get("/"+userEmail+"/tripList"
+		System.out.println("test SingleTrip getId="+this.tripList.get(0).getId());
+		mockMvc.perform(get("/"+userEmail+"/tripList/"
 				+this.tripList.get(0).getId()))
 				.andExpect(status().isOk())
 				.andExpect(content().contentType(mediaType))
-				.andExpect(jsonPath("$.id", is(this.tripList.get(0).getId().intValue())))
-				.andExpect(jsonPath("$.uri", is("http://hello-demo-hateoas/1/"+userEmail)))
-				.andExpect(jsonPath("$.title", is("title1")));
+				.andExpect(jsonPath("$.trip.id", is(this.tripList.get(0).getId().intValue())))
+				.andExpect(jsonPath("$.trip.title", is("title1")))
+				.andExpect(jsonPath("$.trip.description", is("description1")));
 				//response body에 jsonPath expression를 이용해 접근하여 하위 subset에 json경로에 있는 값과 일치하는 값이 있는지 확인 
 				//is(value)는 equalTo(value)를 위한 wrapper
 	}
-	
-	@Test
-	public void getSeveralTrip() throws Exception{
-		mockMvc.perform(get("/" + userEmail + "/tripList"))
-				.andExpect(status().isOk())
-				.andExpect(content().contentType(mediaType))
-				.andExpect(jsonPath("$", hasSize(2)))
-				.andExpect(jsonPath("$[0].id", is(this.tripList.get(0).getId().intValue())))
-				.andExpect(jsonPath("$[0].uri", is("http://hello-demo-hateoas/1/"+userEmail)))
-				.andExpect(jsonPath("$[0].title", is("title1")))
-				.andExpect(jsonPath("$[1].id", is(this.tripList.get(1).getId().intValue())))
-				.andExpect(jsonPath("$[1].uri", is("http://hello-demo-hateoas/2/"+userEmail)))
-				.andExpect(jsonPath("$[1].title", is("title2")));
-	}
 
-	@Test
-	public void addTour() throws Exception{
-		String tourJson = json(new Trip(this.tourist, "http://hello-demo-hateoas/3"+userEmail, "happy ChiangMai!"));
-		
-		System.out.println("tourJson" + tourJson); 
-		this.mockMvc.perform(post("/"+ userEmail + "/tripList")
-				.contentType(mediaType)
-				.content(tourJson))
-				.andExpect(status().isCreated());
-	}
 	
 	protected String json(Object obj) throws IOException{
 		MockHttpOutputMessage mockHttpOutputMessage = new MockHttpOutputMessage();

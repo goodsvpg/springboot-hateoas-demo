@@ -19,37 +19,38 @@ public class Trip {
 	@GeneratedValue
 	private Long id;
 	
-	private String uri;
 	private String title;
-	
+	private String description;
+
 	public Trip() {
+		
 	}
 	
-	public Trip(Tourist tourist, String uri, String title){
+	public Trip(Tourist tourist, String title, String description) {
 		this.tourist = tourist;
-		this.uri = uri;
 		this.title = title;
+		this.description = description;
 	}
 
 	public Tourist getTourist() {
 		return tourist;
 	}
-
+	
 	public Long getId() {
 		return id;
-	}
-
-	public String getUri() {
-		return uri;
 	}
 
 	public String getTitle() {
 		return title;
 	}
 
+	public String getDescription() {
+		return description;
+	}
+
 	@Override
 	public String toString() {
-		return "Trip [tourist=" + tourist + ", id=" + id + ", uri=" + uri + ", title=" + title + "]";
+		return "Trip [tourist=" + tourist + ", id=" + id + ", title=" + title + ", description=" + description + "]";
 	}
 
 }
