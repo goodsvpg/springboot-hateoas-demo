@@ -48,6 +48,7 @@ public class Trip {
 		return description;
 	}
 
+	
 	@Override
 	public String toString() {
 		return "Trip [tourist=" + tourist + ", id=" + id + ", title=" + title + ", description=" + description + "]";

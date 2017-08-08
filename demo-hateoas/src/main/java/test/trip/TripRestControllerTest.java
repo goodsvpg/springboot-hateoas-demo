@@ -91,6 +91,7 @@ public class TripRestControllerTest {
 	}
 	
 	
+	
 	@Test
 	public void getSingleTrip() throws Exception{
 		System.out.println("test SingleTrip getId="+this.tripList.get(0).getId());

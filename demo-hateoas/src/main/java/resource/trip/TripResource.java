@@ -13,6 +13,7 @@ public class TripResource extends ResourceSupport{
 	//trip collection과 개별 self link를 삽입하려고 사용
 	private final Trip trip;
 
+	
 	public TripResource(Trip trip) {
 		String userEmail = trip.getTourist().getUserEmail();
 		this.trip = trip;
