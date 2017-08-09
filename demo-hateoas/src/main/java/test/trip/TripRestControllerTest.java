@@ -104,6 +104,12 @@ public class TripRestControllerTest {
 				//is(value)는 equalTo(value)를 위한 wrapper
 	}
 
+	@Test
+	public void getSeveralTrip() throws Exception{
+		mockMvc.perform(get("/"+userEmail+"/tripList"))
+				.andExpect(status().isOk())
+				.andExpect(content().contentType(mediaType));
+	}
 	
 	protected String json(Object obj) throws IOException{
 		MockHttpOutputMessage mockHttpOutputMessage = new MockHttpOutputMessage();

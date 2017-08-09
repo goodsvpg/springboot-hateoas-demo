@@ -34,10 +34,9 @@ public class Application {
 				System.out.println("tourist="+tourist.toString());
 				tripRepository.save(new Trip(tourist, "title1", "description1"));
 				Trip trip = tripRepository.save(new Trip(tourist, "title2", "description2"));
-				System.out.println("trip="+trip.toString());
+				System.out.println("Application trip="+trip.toString());
 			}
 			
-			System.out.println("find?"+tripRepository.findByTouristUserEmail("aa@helloMail.com").size());
 		};
 	}
 }

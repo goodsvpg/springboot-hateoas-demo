@@ -1,10 +1,17 @@
 package rest.trip;
 
 import java.net.URI;
+import java.util.ArrayList;
 import java.util.Collection;
+import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collector;
+import java.util.stream.Collectors;
+
+import javax.xml.bind.annotation.XmlRootElement;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.hateoas.Resources;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -34,11 +41,26 @@ public class TripRestController{
 	}
 	
 	@RequestMapping(method = RequestMethod.GET)
-	public Collection<Trip> getTripList(@PathVariable String userEmail){
-		System.out.println("get!");
+	public List<TripResource> getTripList(@PathVariable String userEmail){
 		this.validateTourist(userEmail);
-		return this.tripRepository.findByTouristUserEmail(userEmail);
+
 		//userEmail로 작성된 trip 리스트를 모두 return
+		Collection<Trip> tripCollection = this.tripRepository.findByTouristUserEmail(userEmail);
+		List<TripResource> tripResourceList = new ArrayList<>(); 
+		if(!tripCollection.isEmpty()){
+			for(Trip t : tripCollection){
+				tripResourceList.add(new TripResource(t));
+			}
+		}
+		
+		//after java 8
+//		List<TripResource> tripResourceList = this.tripRepository.findByTouristUserEmail(userEmail)
+//												.stream().map(TripResource::new)
+//												//userMail과 일치하는 Trip을 이용하여 TripResource 인스턴스 생성
+//												.collect(Collectors.toList());
+//												//TripResource 인스턴스들을 List에 담음
+		
+		return tripResourceList;
 	}
 	
 	@RequestMapping(method = RequestMethod.POST)
@@ -68,6 +90,9 @@ public class TripRestController{
 	public TripResource getTrip(@PathVariable String userEmail, @PathVariable Long tripId){
 		System.out.println("getTrip userEmail=" + userEmail + ", tripId="+tripId);
 		this.validateTourist(userEmail);
+		//{"trip":{"id":1,"title":"title1","description":"description1"},
+		//"_links":{"trip-title":{"href":"title1"},"aa@helloMail.com":{"href":"http://localhost:8090/aa%40helloMail.com/tripList"},
+		//"self":{"href":"http://localhost:8090/aa@helloMail.com/tripList/1"}}}
 		return new TripResource(this.tripRepository.findOne(tripId));
 		//userEmail을 기준으로 엔티티 검색
 	}
