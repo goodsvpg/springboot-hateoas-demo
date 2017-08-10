@@ -11,6 +11,7 @@ import java.util.stream.Collectors;
 import javax.xml.bind.annotation.XmlRootElement;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.hateoas.Link;
 import org.springframework.hateoas.Resources;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -74,12 +75,15 @@ public class TripRestController{
 			//userEmail과 일치하는 tourist가 있다면 
 			Trip result = tripRepository.save(new Trip(tourist.get(), input.getTitle(), input.getDescription()));
 			
-			URI location = ServletUriComponentsBuilder //Servlet 요청에서 사용 가능한 URL정보를 복사하는 정적 팩토리 메소드를 제공
-							.fromCurrentRequest().path("/{id}") //지정된 경로를 builder의 기존 경로에 추가
-							.buildAndExpand(result.getId()).toUri();
-							//uri template 변수를 array의 변수로 변경 ->uri로 변경
-			System.out.println("uri!"+location.getPath());	
-			return ResponseEntity.created(location).build();
+//			URI location = ServletUriComponentsBuilder //Servlet 요청에서 사용 가능한 URL정보를 복사하는 정적 팩토리 메소드를 제공
+//							.fromCurrentRequest().path("/{id}") //지정된 경로를 builder의 기존 경로에 추가
+//							//pk
+//							.buildAndExpand(result.getId()).toUri();
+//							//uri template 변수를 array의 변수로 변경 ->uri template로 변경
+//			return ResponseEntity.created(location).build();
+			Link oneTrip = new TripResource(result).getLink("self");
+			return ResponseEntity.created(URI.create(oneTrip.getHref())).build();
+			
 		}else{
 			return ResponseEntity.noContent().build();
 		}
