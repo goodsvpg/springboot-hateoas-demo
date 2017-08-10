@@ -71,6 +71,7 @@ public class TripRestController{
 		//Optional : 값이 있거나 null인 컨테이너 value
 		
 		if(tourist.isPresent()){
+			//userEmail과 일치하는 tourist가 있다면 
 			Trip result = tripRepository.save(new Trip(tourist.get(), input.getTitle(), input.getDescription()));
 			
 			URI location = ServletUriComponentsBuilder //Servlet 요청에서 사용 가능한 URL정보를 복사하는 정적 팩토리 메소드를 제공

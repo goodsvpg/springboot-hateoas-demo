@@ -111,6 +111,16 @@ public class TripRestControllerTest {
 				.andExpect(content().contentType(mediaType));
 	}
 	
+	@Test
+	public void createTrip() throws Exception{
+		String tripJson = json(new Trip(this.tourist, "enjoy chiangmai ", "enjoy chiangmai with me!"));
+		mockMvc.perform(post("/"+userEmail+"/tripList")
+				.contentType(mediaType)
+				.content(tripJson))
+				.andExpect(status().isCreated());
+				//201 : 새로운 resource 생성
+	}
+	
 	protected String json(Object obj) throws IOException{
 		MockHttpOutputMessage mockHttpOutputMessage = new MockHttpOutputMessage();
 		//HttpOutputMessage의 모의 구현 
