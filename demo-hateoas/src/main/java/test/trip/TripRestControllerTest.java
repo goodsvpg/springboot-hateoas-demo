@@ -98,6 +98,7 @@ public class TripRestControllerTest {
 				.andExpect(status().isOk())
 				.andExpect(content().contentType(mediaType))
 				.andExpect(jsonPath("$.trip.id", is(this.tripList.get(0).getId().intValue())))
+				//intValue() : Long ->int
 				.andExpect(jsonPath("$.trip.title", is("title1")))
 				.andExpect(jsonPath("$.trip.description", is("description1")));
 				//response body에 jsonPath expression를 이용해 접근하여 하위 subset에 json경로에 있는 값과 일치하는 값이 있는지 확인 
@@ -108,7 +109,15 @@ public class TripRestControllerTest {
 	public void getSeveralTrip() throws Exception{
 		mockMvc.perform(get("/"+userEmail+"/tripList"))
 				.andExpect(status().isOk())
-				.andExpect(content().contentType(mediaType));
+				.andExpect(content().contentType(mediaType))
+				.andExpect(jsonPath("$._embedded.tripResourceList", hasSize(2)))
+				.andExpect(jsonPath("$._embedded.tripResourceList[0].trip.id", is(this.tripList.get(0).getId().intValue())))
+				.andExpect(jsonPath("$._embedded.tripResourceList[0].trip.title", is("title1")))
+				.andExpect(jsonPath("$._embedded.tripResourceList[0].trip.description", is("description1")))
+				.andExpect(jsonPath("$._embedded.tripResourceList[1].trip.id", is(this.tripList.get(1).getId().intValue())))
+				.andExpect(jsonPath("$._embedded.tripResourceList[1].trip.title", is("title2")))
+				.andExpect(jsonPath("$._embedded.tripResourceList[1].trip.description", is("description2")));
+		
 	}
 	
 	@Test
