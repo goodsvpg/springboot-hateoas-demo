@@ -12,6 +12,7 @@ import javax.xml.bind.annotation.XmlRootElement;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.hateoas.Link;
+import org.springframework.hateoas.MediaTypes;
 import org.springframework.hateoas.Resources;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -41,8 +42,9 @@ public class TripRestController{
 		System.out.println("TripRestController constructor");
 	}
 	
-	@RequestMapping(method = RequestMethod.GET)
-	public List<TripResource> getTripList(@PathVariable String userEmail){
+	@RequestMapping(method = RequestMethod.GET, produces = MediaTypes.HAL_JSON_VALUE)
+	//content-type을 application/hal+json로 변경
+	public Resources<TripResource> getTripList(@PathVariable String userEmail){
 		this.validateTourist(userEmail);
 
 		//userEmail로 작성된 trip 리스트를 모두 return
@@ -61,7 +63,8 @@ public class TripRestController{
 //												.collect(Collectors.toList());
 //												//TripResource 인스턴스들을 List에 담음
 		
-		return tripResourceList;
+		System.out.println("resource="+new Resources<>(tripResourceList).getContent());
+		return new Resources<>(tripResourceList);
 	}
 	
 	@RequestMapping(method = RequestMethod.POST)
@@ -83,6 +86,7 @@ public class TripRestController{
 //			return ResponseEntity.created(location).build();
 			Link oneTrip = new TripResource(result).getLink("self");
 			return ResponseEntity.created(URI.create(oneTrip.getHref())).build();
+			//ResponseEntity - Model의 type에 따라 Link or LinkBuilder 조회
 			
 		}else{
 			return ResponseEntity.noContent().build();
