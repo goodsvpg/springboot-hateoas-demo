@@ -8,6 +8,8 @@ import rest.trip.TripRestController;
 
 import static org.springframework.hateoas.mvc.ControllerLinkBuilder.*;
 
+import java.lang.reflect.Method;
+
 import javax.xml.bind.annotation.XmlRootElement;
 
 public class TripResource extends ResourceSupport{
@@ -25,9 +27,20 @@ public class TripResource extends ResourceSupport{
 		//"_links"에서 확인 가능
 		this.add(linkTo(TripRestController.class, userEmail).withRel(userEmail));
 		//userEmail을 가지고 builder instance가 Link를 생성하고 resource에 저장
-		this.add(linkTo(methodOn(TripRestController.class, userEmail).getTrip(userEmail, trip.getId())).withSelfRel());
+		//this.add(linkTo(methodOn(TripRestController.class, userEmail).getTrip(userEmail, trip.getId())).withSelfRel());
 		//methodOn:컨트롤러 클래스의 프록시를 생성시킴
+		//dummy method invocation
 		//withSelRel:getTrip실행시 builder instance가 default self rel로 Link를 생성
+		
+		//다른방식
+		try {
+			Method method = TripRestController.class.getMethod("getTrip", String.class, Long.class);
+			Link link = linkTo(method, userEmail, trip.getId()).withSelfRel();
+			this.add(link);
+		} catch (NoSuchMethodException | SecurityException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 	}
 
 
